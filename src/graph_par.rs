@@ -179,8 +179,8 @@ where
         let mut in_flight: usize = 0;
 
         // Inject ready nodes
-        for node in &ready_nodes {
-            item_ready_tx.send(node.clone()).unwrap();
+        for node in ready_nodes.into_iter() {
+            item_ready_tx.send(node).unwrap();
             in_flight += 1;
         }
 
@@ -200,8 +200,8 @@ where
                         let next_nodes = remove_node_id::<I>(id, &deps, &rdeps)?;
 
                         // Send the next available nodes to the channel.
-                        for node_id in &next_nodes {
-                            item_ready_tx.send(node_id.clone()).unwrap();
+                        for node_id in next_nodes.into_iter() {
+                            item_ready_tx.send(node_id).unwrap();
                             in_flight += 1;
                         }
 
@@ -282,7 +282,7 @@ where
         CB: ProducerCallback<Self::Item>,
     {
         callback.callback(DepGraphProducer {
-            counter: self.counter.clone(),
+            counter: self.counter,
             item_ready_rx: self.item_ready_rx,
             item_done_tx: self.item_done_tx,
         })
@@ -340,8 +340,8 @@ where
 
     fn into_iter(self) -> Self::IntoIter {
         Self {
-            counter: self.counter.clone(),
-            item_ready_rx: self.item_ready_rx.clone(),
+            counter: self.counter,
+            item_ready_rx: self.item_ready_rx,
             item_done_tx: self.item_done_tx,
         }
     }
