@@ -180,7 +180,9 @@ where
 
         // Inject ready nodes
         for node in ready_nodes.into_iter() {
-            item_ready_tx.send(node).unwrap();
+            item_ready_tx
+                .send(node)
+                .unwrap_or_else(|err| panic!("could not send message: {}", err));
             in_flight += 1;
         }
 
@@ -201,7 +203,8 @@ where
 
                         // Send the next available nodes to the channel.
                         for node_id in next_nodes.into_iter() {
-                            item_ready_tx.send(node_id).unwrap();
+                            item_ready_tx.send(node_id)
+                                .unwrap_or_else(|err| panic!("could not send message: {}", err));
                             in_flight += 1;
                         }
 
