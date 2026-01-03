@@ -12,11 +12,10 @@ description = "Dependency graph resolver library"
 
 [features]
 default = ["parallel"]
-
 parallel = ["rayon", "crossbeam-channel"]
 
 [dev-dependencies]
-criterion = "0.3"
+criterion = "0.8"
 
 [[bench]]
 name = "dep_graph"
